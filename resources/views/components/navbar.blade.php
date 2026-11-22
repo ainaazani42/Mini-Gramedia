@@ -68,7 +68,9 @@
 
                 {{-- -icon keranjang- --}}
                 <div class="mt-3 ms-2">
+                    <a href="{{ route('carts') }}">
                     <i class="fa-solid fa-cart-arrow-down fs-3 text-dark"></i>
+                    </a>
                 </div>
             @endif
         </ul>
@@ -88,9 +90,7 @@
                         {{-- Titik hijau --}}
                         <span class="rounded-circle bg-success border border-white"
                             style="position: absolute; width: 11px; height: 11px; bottom: 0; right: 0;">
-                        </span>
-
-                    </span>
+                        </span>                    </span>
                 </a>
 
                 <a href="{{ route('logout') }}" class="btn btn-danger ms-2">Keluar</a>

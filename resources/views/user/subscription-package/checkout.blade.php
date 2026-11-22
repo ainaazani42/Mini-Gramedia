@@ -38,7 +38,8 @@
                         <hr>
                         <div class="d-flex justify-content-between ps-2">
                             <h4>Total Bayar</h4>
-                            <h4 class="text-primary">Rp{{ number_format($package->price, 0, ',', '.') }}</h4>
+                             <h4 class="text-primary">
+                                Rp{{ number_format($package->price - $package->price * 0.2, 0, ',', '.') }}</h4>
                         </div>
                         <button type="submit" class="btn btn-primary rounded-pill mt-2 w-100">Bayar Sekarang</button>
                     </form>

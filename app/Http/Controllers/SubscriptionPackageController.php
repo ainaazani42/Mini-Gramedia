@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\SubscriptionPackage;
 use App\Models\SubscriptionPackageUser;
+use App\Exports\SubscriptionPackageExport; // Pastikan menggunakan class export yang benar
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +21,7 @@ class SubscriptionPackageController extends Controller
             $model  = SubscriptionPackage::query();
 
             return DataTables::eloquent($model)
-                //menambahkan no urut data1-2
                 ->addIndexColumn()
-                //menambahkan data selain yang di database
                 ->addColumn('action', function ($data) {
                     $editUrl = route('admin.paket-langganan.edit', $data->id);
                     $deleteUrl = route('admin.paket-langganan.destroy', $data->id);
@@ -29,16 +29,8 @@ class SubscriptionPackageController extends Controller
 
                     $csrf = csrf_field();
                     $method = method_field('DELETE');
-                    $btnEdit = '<a href="' . $editUrl . '"
-                                    class="btn btn-warning btn-sm me-2">Edit</a>';
-                    $btnDelete = '<form action="' . $deleteUrl . '"method="POST"
-                                class="d-inline">' . $csrf . $method . '<button type="submit"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm(\'Apakah Anda yakin ingin menghapus paket langganan ini?\')">
-                                        Hapus
-                                    </button>
-                                </form>';
-
+                    $btnEdit = '<a href="' . $editUrl . '" class="btn btn-warning btn-sm me-2">Edit</a>';
+                    $btnDelete = '<form action="' . $deleteUrl . '" method="POST" class="d-inline">' . $csrf . $method . '<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Apakah Anda yakin ingin menghapus paket langganan ini?\')">Hapus</button></form>';
                     $btnBooks = '<a href="' . $books . '" class="btn btn-info btn-sm">Buku</a>';
 
                     return $btnEdit . $btnDelete . $btnBooks;
@@ -47,7 +39,6 @@ class SubscriptionPackageController extends Controller
         }
         return view('admin.subscription-package.index');
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -133,16 +124,22 @@ class SubscriptionPackageController extends Controller
     {
         $package = SubscriptionPackage::findOrFail($id);
 
-        // Simpan data langganan ke database atau lakukan proses pembayaran di sini
-        // Misalnya, Anda bisa membuat model Subscription untuk menyimpan data langganan
-
-        // Contoh penyimpanan data langganan
         SubscriptionPackageUser::create([
             'user_id' => Auth::id(),
             'subscription_package_id' => $package->id,
-            'expired_date' => now()->addDays(30)->format('Y-m-d'), // Misalnya, langganan berlaku selama 1 bulan
+            'expired_date' => now()->addDays(30)->format('Y-m-d'),
         ]);
 
         return redirect()->route('home')->with('succes', 'Pembayaran berhasil. Terima kasih telah berlangganan paket!');
     }
+
+    public function export()
+    {
+        return Excel::download(
+            new SubscriptionPackageExport,
+            'data_paket_langganan.xlsx'
+        );
+    }
+
+    
 }

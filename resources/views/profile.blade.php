@@ -98,7 +98,7 @@
 
                                         <strong>
                                             Rp
-                                            {{ number_format($subscription->subscriptionPackage->price, 0, ',', '.') }}
+                                           {{ number_format($subscription->subscriptionPackage->price - $subscription->subscriptionPackage->price * 0.2, 0, ',', '.') }}
                                         </strong>
                                     </div>
 

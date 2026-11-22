@@ -18,4 +18,9 @@ class SubscriptionPackage extends Model
     {
         return $this->hasMany(SubscriptionPackageUser::class);
     }
+
+    public function subscriptionPackageUsers(): HasMany
+    {
+        return $this->hasMany(SubscriptionPackageUser::class);
+    }
 }
